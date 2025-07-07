@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refrigerator Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass {
+            background: rgba(139, 92, 246, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        .loading {
+            display: none;
+        }
+        .loading.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-purple-100 min-h-screen">
+    <nav class="glass p-4 mb-8">
+        <div class="container mx-auto">
+            <h1 class="text-3xl font-bold text-purple-800 mb-4">Refrigerator Marketplace</h1>
+            
+            <!-- Scraping Controls -->
+            <div class="flex gap-4 items-center">
+                <input type="text" id="searchQuery" value="refrigerator" 
+                       class="px-4 py-2 rounded-lg border border-purple-300 focus:outline-none focus:border-purple-500"
+                       placeholder="Search query...">
+                <select id="sourceSelect" class="px-4 py-2 rounded-lg border border-purple-300">
+                    <option value="both">Both Sources</option>
+                    <option value="amazon">Amazon Only</option>
+                    <option value="aliexpress">AliExpress Only</option>
+                </select>
+                <button onclick="startScraping()" 
+                        class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                    Start Scraping
+                </button>
+            </div>
+            
+            <!-- Loading indicator -->
+            <div class="loading mt-4" id="loadingDiv">
+                <p class="text-purple-600">⏳ Scraping in progress... This may take a few minutes.</p>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="productsGrid">
+            {% for product in products %}
+            <div class="glass rounded-lg p-6 hover:shadow-xl transition-shadow">
+                <img src="{{ product.img_url }}" alt="{{ product.title }}" 
+                     class="w-full h-48 object-cover rounded-lg mb-4"
+                     onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+                <h3 class="text-lg font-semibold text-purple-900 mb-2">
+                    {{ product.title[:60] }}{% if product.title|length > 60 %}...{% endif %}
+                </h3>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-yellow-500">★ {{ product.rating }}</span>
+                    <span class="text-sm text-purple-600">{{ product.reviews }} reviews</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="text-2xl font-bold text-purple-800">{{ product.price }}</span>
+                    <span class="text-xs bg-purple-200 px-2 py-1 rounded">{{ product.ref }}</span>
+                </div>
+                <a href="{{ product.url }}" target="_blank" 
+                   class="mt-4 block text-center bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+                    View Product
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <script>
+        function startScraping() {
+            const query = document.getElementById('searchQuery').value;
+            const source = document.getElementById('sourceSelect').value;
+            const loadingDiv = document.getElementById('loadingDiv');
+            
+            loadingDiv.classList.add('active');
+            
+            fetch(`/api/scrape?query=${query}&source=${source}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(`Scraping completed! Found ${data.count} products.`);
+                        location.reload(); // Reload to show new products
+                    } else {
+                        alert('Scraping failed: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    alert('Error: ' + error);
+                })
+                .finally(() => {
+                    loadingDiv.classList.remove('active');
+                });
+        }
+    </script>
+</body>
+</html>
