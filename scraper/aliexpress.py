@@ -103,3 +103,7 @@ class AliExpressScraper:
             feedback = data.get('titleModule', {}).get('feedbackRating', {})
             product['rating'] = float(feedback.get('averageStar', 0))
             product['reviews'] = int(feedback.get('trialReviewNum', 0))
+
+        except Exception as e:
+            print(f"Error scraping product details from {url}: {e}")
+            return None
