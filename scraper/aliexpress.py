@@ -103,5 +103,3 @@ class AliExpressScraper:
             feedback = data.get('titleModule', {}).get('feedbackRating', {})
             product['rating'] = float(feedback.get('averageStar', 0))
             product['reviews'] = int(feedback.get('trialReviewNum', 0))
-            
-            <span class="ml-2" /><span class="inline-block w-3 h-3 rounded-full bg-neutral-a12 align-middle mb-[0.1rem]" />
