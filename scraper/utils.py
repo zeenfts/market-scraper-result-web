@@ -17,7 +17,8 @@ def setup_chrome_driver():
     chrome_options.add_argument('--window-size=1920,1080')
     
     # This will automatically download and manage chromedriver
-    service = Service(ChromeDriverManager().install())
+    # service = Service(ChromeDriverManager().install())
+    service = Service('/usr/bin/chromedriver')  # Fedora default location
     return webdriver.Chrome(service=service, options=chrome_options)
 
 def format_price_idr(value):
