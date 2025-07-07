@@ -14,6 +14,8 @@ Web Scraping of Refrigerators listed on Marketplaces (Amazon and AliExpress) usi
 
 This app is configured for deployment on Render.com
 
+![result view](https://github.com/zeenfts/market-scraper-result-web/blob/main/data/scraper-marketplaces-result.png)
+
 ---
 
 <sub> Past Contributors: [Audhini](https://github.com/audhinisy), [Ikhsan](https://github.com/ikhsantasef), [Shahnaz](https://github.com/melshnz)</sub>
