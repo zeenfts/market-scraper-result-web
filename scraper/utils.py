@@ -1,10 +1,12 @@
 import os
 from dotenv import load_dotenv
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 load_dotenv()
 
 def setup_chrome_driver():
-    from selenium import webdriver
     from selenium.webdriver.chrome.options import Options
     
     chrome_options = Options()
@@ -14,7 +16,9 @@ def setup_chrome_driver():
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--window-size=1920,1080')
     
-    return webdriver.Chrome(options=chrome_options)
+    # This will automatically download and manage chromedriver
+    service = Service(ChromeDriverManager().install())
+    return webdriver.Chrome(service=service, options=chrome_options)
 
 def format_price_idr(value):
     """Format price to IDR"""
